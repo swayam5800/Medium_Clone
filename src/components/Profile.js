@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import UserProfile from "./UserProfile";
+import UserPosts from "./UserPosts";
+import AuthorsToFollow from "./AuthorsToFollow";
 
 const Profile = () => {
   const [userData, setUserData] = useState(null);
   const [userPosts, setUserPosts] = useState([]);
+  const [authors, setAuthors] = useState([]);
+  const [followingAuthors, setFollowingAuthors] = useState([]);
 
   useEffect(() => {
     fetchUserData();
     fetchUserPosts();
+    fetchAuthors();
   }, []);
 
   const fetchUserData = async () => {
@@ -21,14 +27,43 @@ const Profile = () => {
 
   const fetchUserPosts = async () => {
     try {
-      const response = await axios.get("/api/posts"); // Replace with your backend API endpoint for fetching user posts
+      const response = await axios.get("/api/user/posts"); // Replace with your backend API endpoint for fetching user posts
       setUserPosts(response.data);
     } catch (error) {
       console.error("Error fetching user posts:", error);
     }
   };
 
-  if (!userData || !userPosts) {
+  const fetchAuthors = async () => {
+    try {
+      const response = await axios.get("/api/authors"); // Replace with your backend API endpoint for fetching authors
+      setAuthors(response.data);
+    } catch (error) {
+      console.error("Error fetching authors:", error);
+    }
+  };
+
+  const handleFollow = async (authorId) => {
+    try {
+      await axios.post(`/api/follow/${authorId}`); // Replace with your backend API endpoint for following an author
+      setFollowingAuthors((prevFollowing) => [...prevFollowing, authorId]);
+    } catch (error) {
+      console.error("Error following author:", error);
+    }
+  };
+
+  const handleUnfollow = async (authorId) => {
+    try {
+      await axios.delete(`/api/follow/${authorId}`); // Replace with your backend API endpoint for unfollowing an author
+      setFollowingAuthors((prevFollowing) =>
+        prevFollowing.filter((id) => id !== authorId)
+      );
+    } catch (error) {
+      console.error("Error unfollowing author:", error);
+    }
+  };
+
+  if (!userData || !userPosts || !authors) {
     return <div>Loading...</div>;
   }
 
@@ -36,18 +71,14 @@ const Profile = () => {
 
   return (
     <div>
-      <h2>Profile</h2>
-      <p>Username: {username}</p>
-      <p>Email: {email}</p>
-      <h3>My Posts</h3>
-      <ul>
-        {userPosts.map((post) => (
-          <li key={post.id}>
-            <h4>{post.title}</h4>
-            <p>{post.content}</p>
-          </li>
-        ))}
-      </ul>
+      <UserProfile username={username} email={email} />
+      <UserPosts userPosts={userPosts} />
+      <AuthorsToFollow
+        authors={authors}
+        followingAuthors={followingAuthors}
+        onFollow={handleFollow}
+        onUnfollow={handleUnfollow}
+      />
     </div>
   );
 };

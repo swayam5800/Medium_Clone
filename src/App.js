@@ -14,11 +14,11 @@ const App = () => {
       <AuthProvider>
         <Router>
           <Routes>
-            <Route path="/" element={<BlogList />} />
+            <Route exact path="/" element={<BlogList />} />
             <Route path="/blog/:id" element={<BlogDetail />} />
             <Route path="/register" element={<RegisterForm />} />
             <Route path="/login" element={<LoginForm />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route exact path="/profile" element={<PrivateRoute />} />
           </Routes>
         </Router>
       </AuthProvider>

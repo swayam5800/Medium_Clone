@@ -3,8 +3,23 @@ import axios from "axios";
 import UserProfile from "./UserProfile";
 import UserPosts from "./UserPosts";
 import AuthorsToFollow from "./AuthorsToFollow";
+import SubscriptionSelection from "./SubscriptionSelection";
+
+const useSubscription = () => {
+  const [selectedPlan, setSelectedPlan] = React.useState(null);
+
+  const handleSubscribe = (plan) => {
+    // Perform actions based on the user's subscription choice
+    // For example, redirect the user to the payment form or update the backend with the selected plan
+    setSelectedPlan(plan);
+    // Other actions related to subscription handling
+  };
+
+  return { selectedPlan, handleSubscribe };
+};
 
 const Profile = () => {
+  const { selectedPlan, handleSubscribe } = useSubscription();
   const [userData, setUserData] = useState(null);
   const [userPosts, setUserPosts] = useState([]);
   const [authors, setAuthors] = useState([]);
@@ -79,6 +94,7 @@ const Profile = () => {
         onFollow={handleFollow}
         onUnfollow={handleUnfollow}
       />
+      <SubscriptionSelection onSubscribe={handleSubscribe} />
     </div>
   );
 };

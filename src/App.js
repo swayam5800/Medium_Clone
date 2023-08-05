@@ -22,10 +22,9 @@ const App = () => {
           </Routes>
         </Router>
       </AuthProvider>
-
-      <button>Click Here!</button>
     </div>
   );
 };
 
 export default App;
+

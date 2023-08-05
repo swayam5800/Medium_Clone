@@ -1,5 +1,6 @@
 import React from "react";
 import seedData from "./seedData.js";
+import Post from "../Post.js"
 
 const BlogList = () => {
   return (
@@ -8,7 +9,8 @@ const BlogList = () => {
       <ul>
         {seedData.map((blog) => (
           <li key={blog.id}>
-            <a href={`/blog/${blog.id}`}>{blog.title}</a>
+            {/* <a href={`/blog/${blog.id}`}>{blog.title}</a> */}
+            <Post post = {blog}/>
           </li>
         ))}
       </ul>
